@@ -62,8 +62,12 @@ abstract class LicenseTask : DefaultTask() {
 					.filter { file ->
 						val relativePath = file.relativeTo(project.projectDir).path.replace('\\', '/')
 						
-						val included = includes.any { pattern ->
-							matchesPattern(relativePath, pattern)
+						val included = if (includes.isEmpty()) {
+							true
+						} else {
+							includes.any { pattern ->
+								matchesPattern(relativePath, pattern)
+							}
 						}
 						
 						val excluded = excludes.any { pattern ->
