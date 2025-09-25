@@ -20,7 +20,7 @@ import java.util.regex.Pattern
 abstract class LicenseTask : DefaultTask() {
 	
 	@get:Internal
-	private lateinit var extension: LicenseExtension
+	lateinit var extension: LicenseExtension
 	
 	@get:InputFile
 	@get:PathSensitive(PathSensitivity.RELATIVE)
