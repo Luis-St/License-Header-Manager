@@ -6,6 +6,9 @@ plugins {
 	id("maven-publish")
 }
 
+group = "net.luis"
+version = "1.0.0"
+
 var mavenUsername: String? = null
 var mavenPassword: String? = null
 val file = rootProject.file("./../credentials.properties")
@@ -45,9 +48,7 @@ publishing {
 		create<MavenPublication>("mavenJava") {
 			from(components["java"])
 			
-			groupId = "net.luis"
 			artifactId = "LHM"
-			version = "1.0.0"
 		}
 	}
 	repositories {

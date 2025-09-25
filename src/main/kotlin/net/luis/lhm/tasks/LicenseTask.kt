@@ -3,10 +3,8 @@ package net.luis.lhm.tasks
 import net.luis.lhm.LicenseHeaderExtension
 import net.luis.lhm.LineEnding
 import org.gradle.api.DefaultTask
-import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
-import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
@@ -23,11 +21,6 @@ abstract class LicenseTask : DefaultTask() {
 	
 	@get:Internal
 	lateinit var extension: LicenseHeaderExtension
-	
-	@get:InputFiles
-	@get:PathSensitive(PathSensitivity.RELATIVE)
-	val inputFiles: FileCollection
-		get() = project.files(getMatchingFiles())
 	
 	@get:InputFile
 	@get:PathSensitive(PathSensitivity.RELATIVE)
@@ -54,6 +47,7 @@ abstract class LicenseTask : DefaultTask() {
 	val excludes: List<String>
 		get() = extension.excludes.toList()
 	
+	@Internal
 	protected fun getMatchingFiles(): List<File> {
 		val srcDir = File(project.projectDir, "src")
 		if (!srcDir.exists()) {
@@ -65,11 +59,11 @@ abstract class LicenseTask : DefaultTask() {
 			.filter { file ->
 				val relativePath = file.relativeTo(project.projectDir).path.replace('\\', '/')
 				
-				val included = extension.includes.any { pattern ->
+				val included = includes.any { pattern ->
 					matchesPattern(relativePath, pattern)
 				}
 				
-				val excluded = extension.excludes.any { pattern ->
+				val excluded = excludes.any { pattern ->
 					matchesPattern(relativePath, pattern)
 				}
 				
@@ -89,7 +83,7 @@ abstract class LicenseTask : DefaultTask() {
 	protected fun readAndProcessHeader(headerFile: File): String {
 		var content = headerFile.readText()
 		
-		extension.variables.forEach { (key, value) ->
+		variables.forEach { (key, value) ->
 			content = content.replace("\${$key}", value)
 			content = content.replace("{{$key}}", value)
 		}

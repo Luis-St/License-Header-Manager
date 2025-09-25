@@ -16,9 +16,8 @@ class CheckLicenseHeadersTask : LicenseTask() {
 	
 	@TaskAction
 	fun checkHeaders() {
-		val headerFile = File(project.rootDir, extension.headerFile)
 		if (!headerFile.exists()) {
-			throw GradleException("Header file not found: ${extension.headerFile}")
+			throw GradleException("Header file not found: $headerFile")
 		}
 		
 		val headerPattern = createHeaderPattern(headerFile)
@@ -42,7 +41,7 @@ class CheckLicenseHeadersTask : LicenseTask() {
 	private fun createHeaderPattern(headerFile: File): Pattern {
 		var content = headerFile.readText()
 		
-		extension.variables.forEach { (key, _) ->
+		variables.forEach { (key, _) ->
 			content = content.replace("\${$key}", ".*?")
 			content = content.replace("{{$key}}", ".*?")
 		}

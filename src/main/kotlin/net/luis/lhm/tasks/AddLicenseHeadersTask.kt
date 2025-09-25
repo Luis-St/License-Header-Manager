@@ -2,8 +2,6 @@ package net.luis.lhm.tasks
 
 import net.luis.lhm.LineEnding
 import org.gradle.api.GradleException
-import org.gradle.api.file.FileCollection
-import org.gradle.api.tasks.OutputFiles
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 import java.util.regex.Pattern
@@ -17,15 +15,10 @@ import java.util.regex.Pattern
  */
 class AddLicenseHeadersTask : LicenseTask() {
 	
-	@get:OutputFiles
-	val outputFiles: FileCollection
-		get() = inputFiles
-	
 	@TaskAction
 	fun addHeaders() {
-		val headerFile = File(project.rootDir, extension.headerFile)
 		if (!headerFile.exists()) {
-			throw GradleException("Header file not found: ${extension.headerFile}")
+			throw GradleException("Header file not found: $headerFile")
 		}
 		
 		val headerContent = readAndProcessHeader(headerFile)
@@ -43,7 +36,7 @@ class AddLicenseHeadersTask : LicenseTask() {
 		val commentedHeader = createBlockComment(headerContent)
 		val newContent = insertOrReplaceHeader(currentContent, commentedHeader)
 		
-		val finalContent = when (extension.lineEnding) {
+		val finalContent = when (lineEnding) {
 			LineEnding.CRLF -> newContent.replace("\n", "\r\n")
 			LineEnding.LF -> newContent.replace("\r\n", "\n")
 		}
@@ -61,7 +54,7 @@ class AddLicenseHeadersTask : LicenseTask() {
 			content
 		}
 		
-		val spacing = "\n".repeat(extension.spacingAfterHeader)
+		val spacing = "\n".repeat(spacingAfterHeader)
 		return header + spacing + contentWithoutHeader
 	}
 }
