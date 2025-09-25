@@ -13,10 +13,10 @@ import java.util.regex.Pattern
  *
  * @author Luis-St
  */
-class AddLicenseHeadersTask : LicenseTask() {
+open class AddLicenseHeadersTask : LicenseTask() {
 	
 	@TaskAction
-	fun addHeaders() {
+	open fun addHeaders() {
 		if (!headerFile.exists()) {
 			throw GradleException("Header file not found: $headerFile")
 		}

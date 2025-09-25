@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "net.luis"
-version = "1.0.0"
+version = "1.0.1"
 
 var mavenUsername: String? = null
 var mavenPassword: String? = null
@@ -48,7 +48,7 @@ publishing {
 		create<MavenPublication>("mavenJava") {
 			from(components["java"])
 			
-			artifactId = "LHM"
+			artifactId = "lhm"
 		}
 	}
 	repositories {

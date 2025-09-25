@@ -1,0 +1,12 @@
+package net.luis.lhm
+
+/**
+ * Enumeration for specifying line ending types.<br>
+ * Includes options for Line Feed (LF) and Carriage Return + Line Feed (CRLF).<br>
+ *
+ * @author Luis-St
+ */
+enum class LineEnding(val value: String) {
+	LF("\n"),
+	CRLF("\r\n")
+}
