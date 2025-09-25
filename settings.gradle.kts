@@ -1,1 +1,1 @@
-rootProject.name = "License-Header-Manager"
+rootProject.name = "License-Manager"

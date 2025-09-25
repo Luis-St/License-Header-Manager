@@ -34,11 +34,11 @@ dependencies {
 
 gradlePlugin {
 	plugins {
-		register("licenseHeaderManager") {
-			id = "net.luis.lhm"
-			implementationClass = "net.luis.lhm.LicenseHeaderManager"
-			displayName = "License Header Manager Plugin"
-			description = "A plugin to manage license headers in source files"
+		register("licenseManager") {
+			id = "net.luis.lm"
+			implementationClass = "net.luis.lm.LicenseManager"
+			displayName = "License Manager Plugin"
+			description = "A plugin to manage licenses in source files"
 		}
 	}
 }
@@ -48,7 +48,7 @@ publishing {
 		create<MavenPublication>("mavenJava") {
 			from(components["java"])
 			
-			artifactId = "lhm"
+			artifactId = "lm"
 		}
 	}
 	repositories {

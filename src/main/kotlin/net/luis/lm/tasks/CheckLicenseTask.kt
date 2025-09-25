@@ -1,4 +1,4 @@
-package net.luis.lhm.tasks
+package net.luis.lm.tasks
 
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.TaskAction
@@ -12,7 +12,7 @@ import java.util.regex.Pattern
  *
  * @author Luis-St
  */
-open class CheckLicenseHeadersTask : LicenseTask() {
+open class CheckLicenseTask : LicenseTask() {
 	
 	@TaskAction
 	open fun checkHeaders() {

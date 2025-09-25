@@ -1,7 +1,7 @@
-package net.luis.lhm.tasks
+package net.luis.lm.tasks
 
-import net.luis.lhm.LicenseHeaderExtension
-import net.luis.lhm.LineEnding
+import net.luis.lm.LicenseExtension
+import net.luis.lm.LineEnding
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
@@ -20,7 +20,7 @@ import java.util.regex.Pattern
 abstract class LicenseTask : DefaultTask() {
 	
 	@get:Internal
-	lateinit var extension: LicenseHeaderExtension
+	lateinit var extension: LicenseExtension
 	
 	@get:InputFile
 	@get:PathSensitive(PathSensitivity.RELATIVE)

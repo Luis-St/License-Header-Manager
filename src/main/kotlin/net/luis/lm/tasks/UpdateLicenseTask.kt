@@ -1,6 +1,6 @@
-package net.luis.lhm.tasks
+package net.luis.lm.tasks
 
-import net.luis.lhm.LineEnding
+import net.luis.lm.LineEnding
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.TaskAction
 import java.io.File
@@ -13,7 +13,7 @@ import java.util.regex.Pattern
  *
  * @author Luis-St
  */
-open class AddLicenseHeadersTask : LicenseTask() {
+open class UpdateLicenseTask : LicenseTask() {
 	
 	@TaskAction
 	open fun addHeaders() {
@@ -54,7 +54,7 @@ open class AddLicenseHeadersTask : LicenseTask() {
 			content
 		}
 		
-		val spacing = "\n".repeat(spacingAfterHeader)
+		val spacing = "\n".repeat(0.coerceAtLeast(spacingAfterHeader))
 		return header + spacing + contentWithoutHeader
 	}
 }

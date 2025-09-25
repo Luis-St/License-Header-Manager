@@ -1,4 +1,4 @@
-package net.luis.lhm
+package net.luis.lm
 
 /**
  * Enumeration for specifying line ending types.<br>

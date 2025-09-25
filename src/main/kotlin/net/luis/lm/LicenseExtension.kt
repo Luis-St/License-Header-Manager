@@ -1,4 +1,4 @@
-package net.luis.lhm
+package net.luis.lm
 
 /**
  * Extension class for configuring the License Header Manager plugin.<br>
@@ -6,12 +6,13 @@ package net.luis.lhm
  *
  * @author Luis-St
  */
-open class LicenseHeaderExtension {
+open class LicenseExtension {
+	
 	open var headerFile: String = "header.txt"
 	open var lineEnding: LineEnding = LineEnding.LF
 	open var spacingAfterHeader: Int = 1
 	open var variables: MutableMap<String, String> = mutableMapOf()
-	open val includes: MutableList<String> = mutableListOf("**/*.java", "**/*.kt")
+	open val includes: MutableList<String> = mutableListOf()
 	open val excludes: MutableList<String> = mutableListOf()
 	
 	open fun include(vararg patterns: String) {

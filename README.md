@@ -1,6 +1,7 @@
-# License Header Manager (LHM)
+# License Manager (LM)
 
-A Gradle plugin for managing license headers in source code files. This plugin helps you automatically add, update, and verify license headers across your project's source files.
+A Gradle plugin for managing license headers in source code files.\
+This plugin helps you automatically add, update, and verify license headers across your project's source files.
 
 ## Features
 
@@ -14,29 +15,26 @@ A Gradle plugin for managing license headers in source code files. This plugin h
 
 ## Installation
 
-### Using the plugins DSL (Gradle 2.1+)
-
 ```kotlin
+// In your settings.gradle.kts
+pluginManagement {
+	plugins {
+		id("net.luis.lm") version "<latest-version>"
+	}
+	
+	repositories {
+		gradlePluginPortal()
+		mavenCentral()
+		maven {
+			url = uri("https://maven.luis-st.net/plugins/")
+		}
+	}
+}
+
+// In your build.gradle.kts
 plugins {
-    id("net.luis.lhm") version "1.0.0"
+	id("net.luis.lm")
 }
-```
-
-### Using legacy plugin application
-
-```kotlin
-buildscript {
-    repositories {
-        maven {
-            url = uri("https://maven.luis-st.net/plugins/")
-        }
-    }
-    dependencies {
-        classpath("net.luis:lhm:1.0.0")
-    }
-}
-
-apply(plugin = "net.luis.lhm")
 ```
 
 ## Configuration
@@ -44,7 +42,7 @@ apply(plugin = "net.luis.lhm")
 Configure the plugin in your `build.gradle.kts`:
 
 ```kotlin
-licenseHeaderManager {
+licenseManager {
     headerFile = "license-header.txt"           // Header template file (default: "header.txt")
     lineEnding = LineEnding.LF                  // Line ending type (default: LF)
     spacingAfterHeader = 2                      // Empty lines after header (default: 1)
@@ -68,7 +66,7 @@ licenseHeaderManager {
 | `lineEnding` | LineEnding | `LineEnding.LF` | Line ending style (`LF` or `CRLF`) |
 | `spacingAfterHeader` | Int | `1` | Number of blank lines after the header |
 | `variables` | Map<String, String> | `{}` | Variables for template substitution |
-| `includes` | List<String> | `["**/*.java", "**/*.kt"]` | File patterns to include |
+| `includes` | List<String> | `[]` | File patterns to include |
 | `excludes` | List<String> | `[]` | File patterns to exclude |
 
 ## Usage
@@ -77,18 +75,18 @@ licenseHeaderManager {
 
 The plugin provides two main tasks:
 
-#### `addLicenseHeaders`
+#### `updateLicenses`
 Adds or updates license headers in matching source files.
 
 ```bash
-./gradlew addLicenseHeaders
+./gradlew updateLicenses
 ```
 
-#### `checkLicenseHeaders`
+#### `checkLicenses`
 Verifies that all matching source files have proper license headers. Fails the build if any files are missing headers.
 
 ```bash
-./gradlew checkLicenseHeaders
+./gradlew checkLicenses
 ```
 
 Both tasks are automatically added to the `license` task group.
@@ -142,7 +140,7 @@ The plugin uses Ant-style glob patterns for file matching:
 ### Examples
 
 ```kotlin
-licenseHeaderManager {
+licenseManager {
     // Include specific file types
     include("**/*.java", "**/*.kt", "**/*.scala", "**/*.groovy")
     
@@ -170,7 +168,7 @@ You can also automatically fix headers:
 
 ```yaml
 - name: Add License Headers
-  run: ./gradlew addLicenseHeaders
+  run: ./gradlew updateLicenses
 ```
 
 ## Advanced Configuration
@@ -182,7 +180,7 @@ For projects with different license requirements:
 ```kotlin
 // Create separate configurations for different modules
 subprojects {
-    licenseHeaderManager {
+    licenseManager {
         when (project.name) {
             "public-api" -> headerFile = "headers/apache-2.0.txt"
             "internal-tools" -> headerFile = "headers/proprietary.txt"
@@ -195,7 +193,7 @@ subprojects {
 ### Custom Line Endings
 
 ```kotlin
-licenseHeaderManager {
+licenseManager {
     // Use CRLF for Windows compatibility
     lineEnding = LineEnding.CRLF
     
@@ -229,7 +227,7 @@ licenseHeaderManager {
 Enable Gradle info logging to see which files are being processed:
 
 ```bash
-./gradlew addLicenseHeaders --info
+./gradlew updateLicenses --info
 ```
 
 ## Contributing

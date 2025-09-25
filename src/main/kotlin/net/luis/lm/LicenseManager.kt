@@ -1,7 +1,7 @@
-package net.luis.lhm
+package net.luis.lm
 
-import net.luis.lhm.tasks.AddLicenseHeadersTask
-import net.luis.lhm.tasks.CheckLicenseHeadersTask
+import net.luis.lm.tasks.UpdateLicenseTask
+import net.luis.lm.tasks.CheckLicenseTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -11,17 +11,18 @@ import org.gradle.api.Project
  *
  * @author Luis-St
  */
-class LicenseHeaderManager : Plugin<Project> {
+class LicenseManager : Plugin<Project> {
+	
 	override fun apply(project: Project) {
-		val extension = project.extensions.create("licenseHeaderManager", LicenseHeaderExtension::class.java)
+		val extension = project.extensions.create("licenseManager", LicenseExtension::class.java)
 		
-		project.tasks.register("addLicenseHeaders", AddLicenseHeadersTask::class.java) { task ->
+		project.tasks.register("updateLicenses", UpdateLicenseTask::class.java) { task ->
 			task.group = "license"
 			task.description = "Adds license headers to source files"
 			task.extension = extension
 		}
 		
-		project.tasks.register("checkLicenseHeaders", CheckLicenseHeadersTask::class.java) { task ->
+		project.tasks.register("checkLicenses", CheckLicenseTask::class.java) { task ->
 			task.group = "license"
 			task.description = "Checks if all source files have proper license headers"
 			task.extension = extension
