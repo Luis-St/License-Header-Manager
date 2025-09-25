@@ -8,7 +8,7 @@ This plugin helps you automatically add, update, and verify license headers acro
 - **Add license headers** to source files automatically
 - **Check existing headers** for compliance
 - **Variable substitution** in header templates
-- **Flexible file patterns** for inclusion/exclusion
+- **Flexible file patterns** for inclusion/exclusion and definition of source sets
 - **Multiple line ending support** (LF/CRLF)
 - **Gradle task integration** with proper incremental builds
 - **Configurable spacing** after headers
@@ -52,6 +52,9 @@ licenseManager {
     variable("author", "Your Name")
     variable("projectName", project.name)
     
+    // Source set definitions
+	sourceSets = listOf("main", "test") // Default source sets to process (default: ["main"])
+    
     // File patterns (supports Ant-style patterns)
     include("**/*.java", "**/*.kt", "**/*.scala")
     exclude("**/generated/**", "**/*.generated.kt")
@@ -66,6 +69,7 @@ licenseManager {
 | `lineEnding` | LineEnding | `LineEnding.LF` | Line ending style (`LF` or `CRLF`) |
 | `spacingAfterHeader` | Int | `1` | Number of blank lines after the header |
 | `variables` | Map<String, String> | `{}` | Variables for template substitution |
+| `sourceSets` | List<String> | `["main"]` | Source sets to process |
 | `includes` | List<String> | `[]` | File patterns to include |
 | `excludes` | List<String> | `[]` | File patterns to exclude |
 
@@ -125,6 +129,16 @@ licenseHeaderManager {
     variable("year", "2024")
     variable("author", "John Doe")
     variable("company", "ACME Corp")
+}
+```
+
+## Source Sets
+
+You can specify which source sets to process. By default, only the `main` source set is included.
+
+```kotlin
+licenseManager {
+    sourceSets = listOf("main", "test", "integrationTest")
 }
 ```
 

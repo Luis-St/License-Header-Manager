@@ -16,11 +16,11 @@ open class CheckLicenseTask : LicenseTask() {
 	
 	@TaskAction
 	open fun checkHeaders() {
-		if (!headerFile.exists()) {
-			throw GradleException("Header file not found: $headerFile")
+		if (!header.exists()) {
+			throw GradleException("Header file not found: $header")
 		}
 		
-		val headerPattern = createHeaderPattern(headerFile)
+		val headerPattern = createHeaderPattern(header)
 		val filesToCheck = getMatchingFiles()
 		val filesWithoutHeader = mutableListOf<File>()
 		

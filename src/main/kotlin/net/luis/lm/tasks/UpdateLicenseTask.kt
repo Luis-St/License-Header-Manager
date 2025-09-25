@@ -17,11 +17,11 @@ open class UpdateLicenseTask : LicenseTask() {
 	
 	@TaskAction
 	open fun addHeaders() {
-		if (!headerFile.exists()) {
-			throw GradleException("Header file not found: $headerFile")
+		if (!header.exists()) {
+			throw GradleException("Header file not found: $header")
 		}
 		
-		val headerContent = readAndProcessHeader(headerFile)
+		val headerContent = readAndProcessHeader(header)
 		val filesToProcess = getMatchingFiles()
 		
 		filesToProcess.forEach { file ->

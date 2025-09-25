@@ -20,12 +20,12 @@ import java.util.regex.Pattern
 abstract class LicenseTask : DefaultTask() {
 	
 	@get:Internal
-	lateinit var extension: LicenseExtension
+	private lateinit var extension: LicenseExtension
 	
 	@get:InputFile
 	@get:PathSensitive(PathSensitivity.RELATIVE)
-	val headerFile: File
-		get() = File(project.rootDir, extension.headerFile)
+	val header: File
+		get() = File(project.rootDir, extension.header)
 	
 	@get:Input
 	val lineEnding: LineEnding
@@ -40,6 +40,10 @@ abstract class LicenseTask : DefaultTask() {
 		get() = extension.variables.toMap()
 	
 	@get:Input
+	val sourceSets: List<String>
+		get() = extension.sourceSets.toList()
+	
+	@get:Input
 	val includes: List<String>
 		get() = extension.includes.toList()
 	
@@ -49,34 +53,31 @@ abstract class LicenseTask : DefaultTask() {
 	
 	@Internal
 	protected fun getMatchingFiles(): List<File> {
-		val srcDir = File(project.projectDir, "src")
-		if (!srcDir.exists()) {
-			return emptyList()
-		}
-		
-		return srcDir.walkTopDown()
-			.filter { it.isFile }
-			.filter { file ->
-				val relativePath = file.relativeTo(project.projectDir).path.replace('\\', '/')
-				
-				val included = includes.any { pattern ->
-					matchesPattern(relativePath, pattern)
-				}
-				
-				val excluded = excludes.any { pattern ->
-					matchesPattern(relativePath, pattern)
-				}
-				
-				included && !excluded
+		return sourceSets
+			.map { File(project.projectDir, "src/$it") }
+			.filter { it.exists() }
+			.flatMap { srcDir ->
+				srcDir.walkTopDown()
+					.filter { it.isFile }
+					.filter { file ->
+						val relativePath = file.relativeTo(project.projectDir).path.replace('\\', '/')
+						
+						val included = includes.any { pattern ->
+							matchesPattern(relativePath, pattern)
+						}
+						
+						val excluded = excludes.any { pattern ->
+							matchesPattern(relativePath, pattern)
+						}
+						
+						included && !excluded
+					}
 			}
 			.toList()
 	}
 	
 	protected fun matchesPattern(path: String, pattern: String): Boolean {
-		val regex = pattern
-			.replace(".", "\\.")
-			.replace("*", ".*")
-			.replace("?", ".")
+		val regex = pattern.replace(".", "\\.").replace("*", ".*").replace("?", ".")
 		return Pattern.matches(regex, path)
 	}
 	

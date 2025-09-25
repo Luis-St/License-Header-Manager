@@ -8,10 +8,11 @@ package net.luis.lm
  */
 open class LicenseExtension {
 	
-	open var headerFile: String = "header.txt"
+	open var header: String = "header.txt"
 	open var lineEnding: LineEnding = LineEnding.LF
 	open var spacingAfterHeader: Int = 1
 	open var variables: MutableMap<String, String> = mutableMapOf()
+	open var sourceSets: MutableList<String> = mutableListOf("main")
 	open val includes: MutableList<String> = mutableListOf()
 	open val excludes: MutableList<String> = mutableListOf()
 	
