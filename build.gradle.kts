@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "net.luis"
-version = "1.0.1"
+version = "1.0.0"
 
 var mavenUsername: String? = null
 var mavenPassword: String? = null
@@ -54,7 +54,7 @@ publishing {
 	repositories {
 		if (mavenUsername != null && mavenPassword != null) {
 			maven {
-				url = uri("https://maven.luis-st.net/libraries/")
+				url = uri("https://maven.luis-st.net/plugins/")
 				credentials {
 					username = mavenUsername
 					password = mavenPassword
