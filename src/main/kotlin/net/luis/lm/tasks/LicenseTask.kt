@@ -102,7 +102,7 @@ abstract class LicenseTask : DefaultTask() {
 			LineEnding.CRLF -> "\r\n"
 		}
 		
-		val lines = content.trim().split(Regex("\\r?\\n|\\r"))
+		val lines = content.trim().split(Regex("\\r?\\n"))
 		return buildString {
 			append("/*")
 			append(lineEndingChar)
@@ -125,8 +125,8 @@ abstract class LicenseTask : DefaultTask() {
 	protected fun hasValidHeader(file: File, headerComment: String): Boolean {
 		val content = file.readText()
 		
-		val normalizedContent = content.replace(Regex("\\r?\\n|\\r"), "\n")
-		val normalizedHeader = headerComment.replace(Regex("\\r?\\n|\\r"), "\n")
+		val normalizedContent = content.replace(Regex("\\r?\\n"), "\n")
+		val normalizedHeader = headerComment.replace(Regex("\\r?\\n"), "\n")
 		
 		return normalizedContent.startsWith(normalizedHeader)
 	}

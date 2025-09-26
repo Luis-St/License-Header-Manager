@@ -39,12 +39,7 @@ open class UpdateLicenseTask : LicenseTask() {
 		val currentContent = file.readText()
 		val newContent = this.insertOrReplaceHeader(currentContent, headerComment)
 		
-		val finalContent = when (this.lineEnding) {
-			LineEnding.CRLF -> newContent.replace("\n", "\r\n")
-			LineEnding.LF -> newContent.replace("\r\n", "\n")
-		}
-		
-		file.writeText(finalContent)
+		file.writeText(newContent)
 	}
 	
 	private fun insertOrReplaceHeader(content: String, headerComment: String): String {
@@ -57,7 +52,6 @@ open class UpdateLicenseTask : LicenseTask() {
 			content
 		}
 		
-		val spacing = "\n".repeat(0.coerceAtLeast(this.spacingAfterHeader) + 1)
-		return headerComment + spacing + contentWithoutHeader
+		return headerComment + contentWithoutHeader
 	}
 }
