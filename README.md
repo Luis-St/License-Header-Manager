@@ -43,12 +43,12 @@ Configure the plugin in your `build.gradle.kts`:
 
 ```kotlin
 licenseManager {
-    headerFile = "license-header.txt"           // Header template file (default: "header.txt")
+    header = "license-header.txt"           // Header template file (default: "header.txt")
     lineEnding = LineEnding.LF                  // Line ending type (default: LF)
     spacingAfterHeader = 2                      // Empty lines after header (default: 1)
     
     // Variable substitution
-    variable("year", "2024")
+    variable("year", "2025")
     variable("author", "Your Name")
     variable("projectName", project.name)
     
@@ -65,7 +65,7 @@ licenseManager {
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| `headerFile` | String | `"header.txt"` | Path to the license header template file |
+| `header` | String | `"header.txt"` | Path to the license header template file |
 | `lineEnding` | LineEnding | `LineEnding.LF` | Line ending style (`LF` or `CRLF`) |
 | `spacingAfterHeader` | Int | `1` | Number of blank lines after the header |
 | `variables` | Map<String, String> | `{}` | Variables for template substitution |
@@ -196,9 +196,9 @@ For projects with different license requirements:
 subprojects {
     licenseManager {
         when (project.name) {
-            "public-api" -> headerFile = "headers/apache-2.0.txt"
-            "internal-tools" -> headerFile = "headers/proprietary.txt"
-            else -> headerFile = "headers/default.txt"
+            "public-api" -> header = "headers/apache-2.0.txt"
+            "internal-tools" -> header = "headers/proprietary.txt"
+            else -> header = "headers/default.txt"
         }
     }
 }
@@ -225,7 +225,7 @@ licenseManager {
    Header file not found: header.txt
    ```
     - Ensure the header file exists in the specified location
-    - Check the `headerFile` configuration path
+    - Check the `header` configuration path
 
 2. **Files not being processed**
     - Verify your include/exclude patterns
