@@ -17,26 +17,28 @@ open class UpdateLicenseTask : LicenseTask() {
 	
 	@TaskAction
 	open fun addHeaders() {
-		if (!header.exists()) {
-			throw GradleException("Header file not found: $header")
+		if (!this.header.exists()) {
+			throw GradleException("Header file not found: ${this.header}")
 		}
 		
-		val headerContent = readAndProcessHeader(header)
-		val filesToProcess = getMatchingFiles()
+		val headerContent = this.readAndProcessHeader(this.header)
+		val headerComment = this.createBlockComment(headerContent)
+		val filesToProcess = this.getMatchingFiles()
 		
 		filesToProcess.forEach { file ->
-			processFile(file, headerContent)
+			if (this.hasValidHeader(file, headerComment)) {
+				this.processFile(file, headerContent)
+			}
 		}
 		
 		println("License headers added to ${filesToProcess.size} files")
 	}
 	
-	private fun processFile(file: File, headerContent: String) {
+	private fun processFile(file: File, headerComment: String) {
 		val currentContent = file.readText()
-		val commentedHeader = createBlockComment(headerContent)
-		val newContent = insertOrReplaceHeader(currentContent, commentedHeader)
+		val newContent = this.insertOrReplaceHeader(currentContent, headerComment)
 		
-		val finalContent = when (lineEnding) {
+		val finalContent = when (this.lineEnding) {
 			LineEnding.CRLF -> newContent.replace("\n", "\r\n")
 			LineEnding.LF -> newContent.replace("\r\n", "\n")
 		}
@@ -44,7 +46,7 @@ open class UpdateLicenseTask : LicenseTask() {
 		file.writeText(finalContent)
 	}
 	
-	private fun insertOrReplaceHeader(content: String, header: String): String {
+	private fun insertOrReplaceHeader(content: String, headerComment: String): String {
 		val existingHeaderPattern = Pattern.compile("^\\s*/\\*.*?\\*/\\s*", Pattern.DOTALL)
 		val matcher = existingHeaderPattern.matcher(content)
 		
@@ -54,7 +56,7 @@ open class UpdateLicenseTask : LicenseTask() {
 			content
 		}
 		
-		val spacing = "\n".repeat(0.coerceAtLeast(spacingAfterHeader) + 1)
-		return header + spacing + contentWithoutHeader
+		val spacing = "\n".repeat(0.coerceAtLeast(this.spacingAfterHeader) + 1)
+		return headerComment + spacing + contentWithoutHeader
 	}
 }

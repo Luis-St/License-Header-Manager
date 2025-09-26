@@ -25,36 +25,36 @@ abstract class LicenseTask : DefaultTask() {
 	@get:InputFile
 	@get:PathSensitive(PathSensitivity.RELATIVE)
 	val header: File
-		get() = File(project.rootDir, extension.header)
+		get() = File(this.project.rootDir, this.extension.header)
 	
 	@get:Input
 	val lineEnding: LineEnding
-		get() = extension.lineEnding
+		get() = this.extension.lineEnding
 	
 	@get:Input
 	val spacingAfterHeader: Int
-		get() = extension.spacingAfterHeader
+		get() = this.extension.spacingAfterHeader
 	
 	@get:Input
 	val variables: Map<String, String>
-		get() = extension.variables.toMap()
+		get() = this.extension.variables.toMap()
 	
 	@get:Input
 	val sourceSets: List<String>
-		get() = extension.sourceSets.toList()
+		get() = this.extension.sourceSets.toList()
 	
 	@get:Input
 	val includes: List<String>
-		get() = extension.includes.toList()
+		get() = this.extension.includes.toList()
 	
 	@get:Input
 	val excludes: List<String>
-		get() = extension.excludes.toList()
+		get() = this.extension.excludes.toList()
 	
 	@Internal
 	protected fun getMatchingFiles(): List<File> {
-		return sourceSets
-			.map { File(project.projectDir, "src/$it") }
+		return this.sourceSets
+			.map { File(this.project.projectDir, "src/$it") }
 			.filter { it.exists() }
 			.flatMap { srcDir ->
 				srcDir.walkTopDown()
@@ -62,16 +62,16 @@ abstract class LicenseTask : DefaultTask() {
 					.filter { file ->
 						val relativePath = file.relativeTo(project.projectDir).path.replace('\\', '/')
 						
-						val included = if (includes.isEmpty()) {
+						val included = if (this.includes.isEmpty()) {
 							true
 						} else {
-							includes.any { pattern ->
-								matchesPattern(relativePath, pattern)
+							this.includes.any { pattern ->
+								this.matchesPattern(relativePath, pattern)
 							}
 						}
 						
-						val excluded = excludes.any { pattern ->
-							matchesPattern(relativePath, pattern)
+						val excluded = this.excludes.any { pattern ->
+							this.matchesPattern(relativePath, pattern)
 						}
 						
 						included && !excluded
@@ -80,7 +80,7 @@ abstract class LicenseTask : DefaultTask() {
 			.toList()
 	}
 	
-	protected fun matchesPattern(path: String, pattern: String): Boolean {
+	private fun matchesPattern(path: String, pattern: String): Boolean {
 		val regex = pattern.replace(".", "\\.").replace("*", ".*").replace("?", ".")
 		return Pattern.matches(regex, path)
 	}
@@ -88,7 +88,7 @@ abstract class LicenseTask : DefaultTask() {
 	protected fun readAndProcessHeader(headerFile: File): String {
 		var content = headerFile.readText()
 		
-		variables.forEach { (key, value) ->
+		this.variables.forEach { (key, value) ->
 			content = content.replace("\${$key}", value)
 			content = content.replace("{{$key}}", value)
 		}
@@ -109,5 +109,11 @@ abstract class LicenseTask : DefaultTask() {
 			}
 			append(" */")
 		}
+	}
+	
+	protected fun hasValidHeader(file: File, headerComment: String): Boolean {
+		val content = file.readText()
+		
+		return content.startsWith(headerComment)
 	}
 }

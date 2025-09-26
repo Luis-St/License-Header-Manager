@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "net.luis"
-version = "1.0.3"
+version = "1.0.4"
 
 var mavenUsername: String? = null
 var mavenPassword: String? = null

@@ -16,16 +16,16 @@ open class CheckLicenseTask : LicenseTask() {
 	
 	@TaskAction
 	open fun checkHeaders() {
-		if (!header.exists()) {
-			throw GradleException("Header file not found: $header")
+		if (!this.header.exists()) {
+			throw GradleException("Header file not found: ${this.header}")
 		}
 		
-		val headerPattern = createHeaderPattern(header)
-		val filesToCheck = getMatchingFiles()
+		val headerComment = this.createBlockComment(this.readAndProcessHeader(this.header))
+		val filesToCheck = this.getMatchingFiles()
 		val filesWithoutHeader = mutableListOf<File>()
 		
 		filesToCheck.forEach { file ->
-			if (!hasValidHeader(file, headerPattern)) {
+			if (!this.hasValidHeader(file, headerComment)) {
 				filesWithoutHeader.add(file)
 			}
 		}
@@ -36,53 +36,5 @@ open class CheckLicenseTask : LicenseTask() {
 		}
 		
 		println("License header check passed for ${filesToCheck.size} files")
-	}
-	
-	private fun createHeaderPattern(headerFile: File): Pattern {
-		var content = headerFile.readText()
-		
-		variables.forEach { (key, _) ->
-			content = content.replace("\${$key}", ".*?")
-			content = content.replace("{{$key}}", ".*?")
-		}
-		
-		content = content
-			.replace("\\", "\\\\")
-			.replace(".", "\\.")
-			.replace("^", "\\^")
-			.replace("$", "\\$")
-			.replace("|", "\\|")
-			.replace("?", "\\?")
-			.replace("*", "\\*")
-			.replace("+", "\\+")
-			.replace("(", "\\(")
-			.replace(")", "\\)")
-			.replace("[", "\\[")
-			.replace("]", "\\]")
-			.replace("{", "\\{")
-			.replace("}", "\\}")
-			.replace("\\.\\*\\?", ".*?")
-		
-		return Pattern.compile(content, Pattern.DOTALL)
-	}
-	
-	private fun hasValidHeader(file: File, headerPattern: Pattern): Boolean {
-		val content = file.readText()
-		
-		val blockCommentPattern = Pattern.compile("^\\s*/\\*(.*?)\\*/", Pattern.DOTALL)
-		val matcher = blockCommentPattern.matcher(content)
-		
-		if (!matcher.find()) {
-			return false
-		}
-		
-		val extractedHeader = matcher.group(1)
-			.split('\n')
-			.joinToString("\n") { line ->
-				line.replace(Regex("^\\s*\\*\\s?"), "").trim()
-			}
-			.trim()
-		
-		return headerPattern.matcher(extractedHeader).matches()
 	}
 }
