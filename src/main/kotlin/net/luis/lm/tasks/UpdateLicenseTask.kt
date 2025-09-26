@@ -21,14 +21,13 @@ open class UpdateLicenseTask : LicenseTask() {
 			throw GradleException("Header file not found: ${this.header}")
 		}
 		
-		val headerContent = this.readAndProcessHeader(this.header)
-		val headerComment = this.createBlockComment(headerContent)
+		val headerComment = this.createBlockComment(this.readAndProcessHeader(this.header))
 		val filesToProcess = this.getMatchingFiles()
 		var processedFiles = 0
 		
 		filesToProcess.forEach { file ->
 			if (this.hasValidHeader(file, headerComment)) {
-				this.processFile(file, headerContent)
+				this.processFile(file, headerComment)
 				processedFiles++;
 			}
 		}
