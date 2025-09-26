@@ -6,7 +6,7 @@ package net.luis.lm
  *
  * @author Luis-St
  */
-enum class LineEnding(val value: String) {
-	LF("\n"),
-	CRLF("\r\n")
+enum class LineEnding {
+	LF,
+	CRLF
 }

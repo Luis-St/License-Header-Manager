@@ -97,11 +97,15 @@ abstract class LicenseTask : DefaultTask() {
 	}
 	
 	protected fun createBlockComment(content: String): String {
-		val lines = content.split('\n')
+		val lines = content.trim().split('\n')
 		return buildString {
 			appendLine("/*")
 			lines.forEach { line ->
-				appendLine(" * $line")
+				if (line.isBlank()) {
+					appendLine(" *")
+				} else {
+					appendLine(" * $line")
+				}
 			}
 			append(" */")
 		}

@@ -54,7 +54,7 @@ open class UpdateLicenseTask : LicenseTask() {
 			content
 		}
 		
-		val spacing = "\n".repeat(0.coerceAtLeast(spacingAfterHeader))
+		val spacing = "\n".repeat(0.coerceAtLeast(spacingAfterHeader) + 1)
 		return header + spacing + contentWithoutHeader
 	}
 }
