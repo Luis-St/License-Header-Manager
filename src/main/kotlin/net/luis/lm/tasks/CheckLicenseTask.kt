@@ -17,7 +17,7 @@ open class CheckLicenseTask : LicenseTask() {
 	@TaskAction
 	open fun checkHeaders() {
 		if (!this.header.exists()) {
-			throw GradleException("Header file not found: ${this.header}")
+			throw GradleException("License header file not found: ${this.header}")
 		}
 		
 		val headerComment = this.createBlockComment(this.readAndProcessHeader(this.header))
@@ -32,9 +32,16 @@ open class CheckLicenseTask : LicenseTask() {
 		
 		if (filesWithoutHeader.isNotEmpty()) {
 			val fileList = filesWithoutHeader.joinToString("\n") { "  - ${it.relativeTo(project.projectDir)}" }
-			throw GradleException("The following files are missing license headers:\n$fileList")
+			
+			val message = if (filesWithoutHeader.size == 1) {
+				"The license header in the following file is either missing or incorrect:\n$fileList"
+			} else {
+				"The license headers in the following files are either missing or incorrect.:\n$fileList"
+			}
+			
+			throw GradleException(message)
 		}
 		
-		println("License header check passed for ${filesToCheck.size} files")
+		println("The license header check passed for ${filesToCheck.size} ${if (filesToCheck.size > 1) "files" else "file"}")
 	}
 }

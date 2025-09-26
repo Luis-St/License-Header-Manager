@@ -116,7 +116,7 @@ abstract class LicenseTask : DefaultTask() {
 			}
 			append(" */")
 			
-			repeat(this@LicenseTask.spacingAfterHeader) {
+			repeat(this@LicenseTask.spacingAfterHeader + 1) {
 				append(lineEndingChar)
 			}
 		}
