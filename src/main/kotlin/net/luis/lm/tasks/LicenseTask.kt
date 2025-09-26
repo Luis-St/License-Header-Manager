@@ -97,23 +97,37 @@ abstract class LicenseTask : DefaultTask() {
 	}
 	
 	protected fun createBlockComment(content: String): String {
-		val lines = content.trim().split('\n')
+		val lineEndingChar = when (this.lineEnding) {
+			LineEnding.LF -> "\n"
+			LineEnding.CRLF -> "\r\n"
+		}
+		
+		val lines = content.trim().split(Regex("\\r?\\n|\\r"))
 		return buildString {
-			appendLine("/*")
+			append("/*")
+			append(lineEndingChar)
 			lines.forEach { line ->
 				if (line.isBlank()) {
-					appendLine(" *")
+					append(" *")
 				} else {
-					appendLine(" * $line")
+					append(" * $line")
 				}
+				append(lineEndingChar)
 			}
 			append(" */")
+			
+			repeat(this@LicenseTask.spacingAfterHeader) {
+				append(lineEndingChar)
+			}
 		}
 	}
 	
 	protected fun hasValidHeader(file: File, headerComment: String): Boolean {
 		val content = file.readText()
 		
-		return content.startsWith(headerComment)
+		val normalizedContent = content.replace(Regex("\\r?\\n|\\r"), "\n")
+		val normalizedHeader = headerComment.replace(Regex("\\r?\\n|\\r"), "\n")
+		
+		return normalizedContent.startsWith(normalizedHeader)
 	}
 }

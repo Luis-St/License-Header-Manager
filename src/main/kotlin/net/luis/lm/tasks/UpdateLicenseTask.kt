@@ -24,14 +24,16 @@ open class UpdateLicenseTask : LicenseTask() {
 		val headerContent = this.readAndProcessHeader(this.header)
 		val headerComment = this.createBlockComment(headerContent)
 		val filesToProcess = this.getMatchingFiles()
+		var processedFiles = 0
 		
 		filesToProcess.forEach { file ->
 			if (this.hasValidHeader(file, headerComment)) {
 				this.processFile(file, headerContent)
+				processedFiles++;
 			}
 		}
 		
-		println("License headers added to ${filesToProcess.size} files")
+		println("License headers added to $processedFiles files")
 	}
 	
 	private fun processFile(file: File, headerComment: String) {
